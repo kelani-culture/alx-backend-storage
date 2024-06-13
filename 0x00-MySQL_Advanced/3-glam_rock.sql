@@ -1,7 +1,7 @@
 --  script that lists all bands with Glam rock as their main
 SELECT
     band_name,
-    (formed - split) AS lifespan
+    (formed - COALESCE(split, '2022-01-01')) AS lifespan
 FROM
     metal_bands
 WHERE
