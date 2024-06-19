@@ -8,7 +8,7 @@ import redis
 
 
 def count_calls(method: Callable) -> Callable:
-    """count calls"""
+    """function count calls"""
 
     @wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -65,3 +65,24 @@ class Cache:
     def get_int(self, val: str):
         """the function get in"""
         return self.get(val, lambda x: int(x))
+
+
+def replay(fn: Callable):
+    """replay function"""
+    client = redis.Redis()
+    qual_name = f"{fn.__qualname__}"
+    invoked_times = client.get(f"{qual_name}").decode("utf-8")
+
+    inputs = [
+        input.decode("utf-8")
+        for input in client.lrange(f"{qual_name}:inputs", 0, -1)
+    ]
+    outputs = [
+        output.decode("utf-8")
+        for output in client.lrange(f"{qual_name}:outputs", 0, -1)
+    ]
+    print(inputs[0])
+    print(f"{qual_name} was called {invoked_times} times")
+
+    for key, val in zip(inputs, outputs):
+        print(f"{qual_name}(*{key}) -> {val}")

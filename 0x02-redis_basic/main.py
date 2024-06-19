@@ -3,24 +3,17 @@
 Main file
 """
 import redis
-
+from exercise import replay
 Cache = __import__('exercise').Cache
 
 cache = Cache()
 
-s1 = cache.store("first")
-print(s1)
-s2 = cache.store("secont")
-print(s2)
-s3 = cache.store("third")
-print(s3)
-
-inputs = cache._redis.lrange(
-    "{}:inputs".format(cache.store.__qualname__), 0, -1
-)
-outputs = cache._redis.lrange(
-    "{}:outputs".format(cache.store.__qualname__), 0, -1
-)
-
-print("inputs: {}".format(inputs))
-print("outputs: {}".format(outputs))
+cache = Cache()
+cache.store("foo")
+cache.store("bar")
+cache.store(42)
+replay(cache.store)
+# Cache.store was called 3 times:
+# Cache.store(*('foo',)) -> 13bf32a9-a249-4664-95fc-b1062db2038f
+# Cache.store(*('bar',)) -> dcddd00c-4219-4dd7-8877-66afbe8e7df8
+# Cache.store(*(42,)) -> 5e752f2b-ecd8-4925-a3ce-e2efdee08d20
