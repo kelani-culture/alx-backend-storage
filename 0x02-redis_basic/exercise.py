@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ excercise module """
 import uuid
-from typing import Union
+from typing import Any, Callable, Optional, Union
 
 import redis
 
@@ -15,3 +15,17 @@ class Cache:
         random_id = str(uuid.uuid4())
         self._redis.set(random_id, data)
         return random_id
+
+    def get(self, key: str, fn: Optional[Callable] = None) -> Any:
+        val = self._redis.get(key)
+        if not val:
+            return None
+        if val and fn is not None:
+            return fn(val)
+        return val
+
+    def get_str(self, val: str):
+        return self.get(val, lambda x: x.decode("utf-8"))
+
+    def get_iint(self, val: str):
+        return self.get(val, lambda x: int(x))
