@@ -81,7 +81,6 @@ def replay(fn: Callable):
         output.decode("utf-8")
         for output in client.lrange(f"{qual_name}:outputs", 0, -1)
     ]
-    print(inputs[0])
     print(f"{qual_name} was called {invoked_times} times")
 
     for key, val in zip(inputs, outputs):
