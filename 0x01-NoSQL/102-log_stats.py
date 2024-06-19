@@ -26,7 +26,7 @@ if __name__ == "__main__":
             {"$sort": {"count": -1}},
             {"$limit": 10}
     ]
-    print("IPS")
+    print("IPs:")
     agg = log.nginx.aggregate(pipeline)
     for dct in agg:
         dct = list(dct.values())
