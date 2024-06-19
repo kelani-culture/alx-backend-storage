@@ -7,14 +7,14 @@ from typing import Any, Callable, Optional, Union
 import redis
 
 
-def count_calls(call: Callable) -> Callable:
+def count_calls(method: Callable) -> Callable:
     """count calls"""
 
-    @wraps(call)
+    @wraps(method)
     def wrapper(self, *args, **kwargs):
-        key = f"{call.__qualname__}"
+        key = f"{method.__qualname__}"
         self._redis.incr(key)
-        return call(self, *args, **kwargs)
+        return method(self, *args, **kwargs)
 
     return wrapper
 
