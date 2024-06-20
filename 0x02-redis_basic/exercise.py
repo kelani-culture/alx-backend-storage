@@ -68,7 +68,7 @@ class Cache:
 
 
 def replay(fn: Callable):
-    """replay function"""
+    """replay function in action"""
     client = redis.Redis()
     qual_name = f"{fn.__qualname__}"
     invoked_times = client.get(f"{qual_name}").decode("utf-8")
